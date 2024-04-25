@@ -1,7 +1,7 @@
 /* Needed gulp config */
 
 var gulp = require('gulp');  
-var sass = require('gulp-sass');
+const sass = require('gulp-sass')(require('sass'));
 var uglify = require('gulp-uglify');
 var rename = require('gulp-rename');
 var notify = require('gulp-notify');
@@ -11,7 +11,7 @@ var plumber = require('gulp-plumber');
 var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 const sourcemaps = require('gulp-sourcemaps');
-const autoprefixer = require('gulp-autoprefixer');
+var autoprefixer = import('gulp-autoprefixer');
 
 /* Setup scss path */
 var paths = {
@@ -65,10 +65,10 @@ gulp.task('sass', function () {
     }))
 
     .pipe(sourcemaps.init())
-    .pipe(autoprefixer({
+    /*.pipe(autoprefixer({
         browsers: ['last 2 versions'],
         cascade: false
-    }))
+    }))*/
     .pipe(gulp.dest('css'))
 
     .pipe(rename({suffix: '.min'}))
@@ -90,7 +90,7 @@ gulp.task('merge-styles', function () {
         'css/vendor/magnific-popup.css',
         'css/vendor/photoswipe.css',
         'css/vendor/default-skin.css',
-        'fonts/icomoon/style.css',
+        'fonts/icomoon demo/style.css',
         ])
         // .pipe(sourcemaps.init())
         // .pipe(autoprefixer({
@@ -126,11 +126,11 @@ gulp.task('browser-sync', function() {
 });
 
 /* Watch scss, js and html files, doing different things with each. */
-gulp.task('default', ['sass', 'scripts', 'browser-sync'], function () {
+gulp.task('default', gulp.series('sass','scripts','browser-sync', function () {
     /* Watch scss, run the sass task on change. */
     gulp.watch(['scss/*.scss', 'scss/**/*.scss'], ['sass'])
     /* Watch app.js file, run the scripts task on change. */
     gulp.watch(['js/main.js'], ['minify-main'])
     /* Watch .html files, run the bs-reload task on change. */
     gulp.watch(['*.html'], ['bs-reload']);
-});
+}));
