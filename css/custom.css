@@ -26,3 +26,8 @@
 table th {
     color: #22eaaa;
 }
+
+.site-desc-humour {
+    font-weight: bold;
+    font-style: italic;
+}
